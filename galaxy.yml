@@ -1,0 +1,27 @@
+---
+
+namespace: expeditioneer
+name: raspberry_pi
+version: 1.0.0
+
+readme: README.md
+
+authors:
+  - Dennis Lamm (@expeditioneer)
+
+license_file: LICENSE
+description: null
+
+tags: [ raspberrypi ]
+
+repository: https://github.com/expeditioneer/ansible-collection-raspberrypi
+documentation: https://github.com/expeditioneer/ansible-collection-raspberry-pi/tree/main/docs
+homepage: https://github.com/expeditioneer/ansible-collection-raspberry-pi
+issues: https://github.com/expeditioneer/ansible-collection-raspberry-pi/issues
+
+build_ignore:
+  - '*.tar.gz'
+  - .gitignore
+  - .idea
+  - .mypy_cache
+  - plugins/modules/test
