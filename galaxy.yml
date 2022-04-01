@@ -2,7 +2,7 @@
 
 namespace: expeditioneer
 name: raspberry_pi
-version: 1.0.0
+version: 1.0.1-dev0
 
 readme: README.md
 

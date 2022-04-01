@@ -12,7 +12,7 @@ DOCUMENTATION = r'''
 ---
 module: raspberry_pi_facts
 
-short_description: This module provides facts for Raspberry PI devices 
+short_description: This module provides facts for Raspberry PI devices
 
 version_added: "1.0.0"
 
