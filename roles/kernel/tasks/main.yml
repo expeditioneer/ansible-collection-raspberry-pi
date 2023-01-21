@@ -1,0 +1,50 @@
+---
+
+- name: Ensure /etc/portage/package.accept_keywords directory exists
+  ansible.builtin.file:
+    path: /etc/portage/package.accept_keywords
+    state: directory
+  become: true
+
+- name: Add keywords for kernel required packages
+  ansible.builtin.template:
+    src: kernel.accept_keywords.j2
+    dest: /etc/portage/package.accept_keywords/05-kernel
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: Configure Raspberry Pi kernel use-flags
+  ansible.builtin.template:
+    src: kernel.useflags.j2
+    dest: /etc/portage/package.use/05-kernel
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: Install kernel required packages
+  expeditioneer.gentoo.portage:
+    package: app-arch/lzop
+  become: true
+
+- name: Install Raspberry Pi kernel sources
+  expeditioneer.gentoo.portage:
+    package: sys-kernel/raspberrypi-sources
+  become: true
+
+- name: Copy kernel configuration
+  ansible.builtin.copy:
+    src: kernel_config
+    dest: /usr/src/linux/.config
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+# ZSTD compression for kernel modules
+- name: Install zstd fast compression library
+  expeditioneer.gentoo.portage:
+    package: app-arch/zstd
+  become: true

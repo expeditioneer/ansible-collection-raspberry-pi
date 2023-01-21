@@ -1,0 +1,15 @@
+---
+
+- name: detect if PoE HAT is mounted
+  ansible.builtin.stat:
+    path: '/sys/firmware/devicetree/base/rpi-poe-fan@0'
+  register: poe_hat
+
+- name: create /boot/config.txt
+  ansible.builtin.template:
+    src: config.txt.j2
+    dest: /boot/config.txt
+    owner: root
+    group: root
+    mode: 0755
+  become: true

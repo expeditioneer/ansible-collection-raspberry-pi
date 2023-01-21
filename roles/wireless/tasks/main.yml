@@ -1,0 +1,84 @@
+---
+
+- name: Accept for 'sys-firmware/raspberrypi-wifi-ucode' required 'Broadcom' license
+  expeditioneer.gentoo.license:
+    package: sys-firmware/raspberrypi-wifi-ucode
+    license: Broadcom
+  become: true
+
+- name: Ensure /etc/portage/package.accept_keywords directory exists
+  ansible.builtin.file:
+    path: /etc/portage/package.accept_keywords
+    state: directory
+  become: true
+
+- name: Add keywords for wireless required packages
+  ansible.builtin.template:
+    src: wireless.accept_keywords.j2
+    dest: /etc/portage/package.accept_keywords/05-wireless
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: Configure wireless use-flags
+  ansible.builtin.template:
+    src: wireless.useflags.j2
+    dest: /etc/portage/package.use/05-wireless
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: Install most up-to-date µCode for the Broadcom wifi chips on Raspberry Pi SBCs
+  expeditioneer.gentoo.portage:
+    package: sys-firmware/raspberrypi-wifi-ucode
+  become: true
+
+- name: Install nl80211 configuration utility for wireless devices using the mac80211 stack
+  expeditioneer.gentoo.portage:
+    package: net-wireless/iw
+  become: true
+
+- name: Install wireless daemon for linux
+  expeditioneer.gentoo.portage:
+    package: net-wireless/iwd
+  become: true
+
+- name: Create systemd service for configuring the regulatory database
+  ansible.builtin.template:
+    src: crda.service.j2
+    dest: /etc/systemd/system/crda.service
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify: restart crda.service
+
+- name: Enable crda.service
+  ansible.builtin.systemd:
+    name: crda
+    enabled: yes
+  become: true
+
+- name: Create WPA authentication file
+  ansible.builtin.template:
+    src: iwd.network_authentication.psk.j2
+    dest: /var/lib/iwd/{{ wlan.ssid }}.psk
+    owner: root
+    group: root
+    mode: 0640
+    force: no
+  become: true
+  notify: restart iwd.service
+  when:
+    - wlan is defined
+    - wlan.ssid is defined
+    - wlan.passphrase is defined
+
+- name: Start and enable iwd.service
+  ansible.builtin.systemd:
+    name: iwd
+    state: started
+    enabled: yes
+  become: true

@@ -9,10 +9,13 @@ readme: README.md
 authors:
   - Dennis Lamm (@expeditioneer)
 
-license_file: LICENSE
-description: null
+dependencies:
+  "expeditioneer.gentoo": ">=1.0.0"
 
-tags: [ raspberrypi ]
+license_file: LICENSE
+description: Collection for managing Raspberry PIs
+
+tags: [raspberrypi, gentoo]
 
 repository: https://github.com/expeditioneer/ansible-collection-raspberrypi
 documentation: https://github.com/expeditioneer/ansible-collection-raspberry-pi/tree/main/docs

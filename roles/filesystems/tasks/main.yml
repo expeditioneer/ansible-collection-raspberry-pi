@@ -1,0 +1,27 @@
+---
+
+- name: Configure filesystems use-flags
+  ansible.builtin.template:
+    src: filesystems.useflags.j2
+    dest: /etc/portage/package.use/01-filesystem
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: Install DOS filesystem tools
+  expeditioneer.gentoo.portage:
+    package: sys-fs/dosfstools
+  become: true
+
+- name: Install BTRFS filesystem utilities
+  expeditioneer.gentoo.portage:
+    package: sys-fs/btrfs-progs
+  become: true
+
+- name: Enable fstrim to discard unused blocks once a week
+  ansible.builtin.systemd:
+    name: fstrim.timer
+    state: started
+    enabled: yes
+  become: true

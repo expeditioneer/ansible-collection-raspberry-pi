@@ -1,0 +1,27 @@
+---
+
+- name: Create network configuration for eth0
+  ansible.builtin.template:
+    src: interface.network.j2
+    dest: /etc/systemd/network/20-wired.network
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify: restart systemd-networkd service
+  vars:
+    interface: end0
+    metric: 10
+
+- name: Create network configuration for wlan0
+  ansible.builtin.template:
+    src: interface.network.j2
+    dest: /etc/systemd/network/25-wireless.network
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify: restart systemd-networkd service
+  vars:
+    interface: wlan0
+    metric: 20

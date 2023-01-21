@@ -1,0 +1,49 @@
+---
+
+- block:
+    - name: accept for 'dev-embedded/rpi-eeprom' required 'rpi-eeprom' license
+      expeditioneer.gentoo.license:
+        package: dev-embedded/rpi-eeprom
+        license: rpi-eeprom
+      become: true
+
+    - name: ensure /etc/portage/package.accept_keywords directory exists
+      ansible.builtin.file:
+        path: /etc/portage/package.accept_keywords
+        state: directory
+      become: true
+
+    - name: add keywords for Raspberry Pi eeprom update tool required packages
+      ansible.builtin.template:
+        src: rpi-eeprom.accept_keywords.j2
+        dest: /etc/portage/package.accept_keywords/05-rpi-eeprom
+        owner: root
+        group: root
+        mode: 0644
+      become: true
+
+    - name: install updater for Raspberry Pi 4 bootloader and the VL805 USB controller
+      expeditioneer.gentoo.portage:
+        package: dev-embedded/rpi-eeprom
+      become: true
+
+    - name: create systemd timer for rpi-eeprom-update
+      ansible.builtin.template:
+        src: rpi-eeprom-update.timer.j2
+        dest: /etc/systemd/system/rpi-eeprom-update.timer
+        owner: root
+        group: root
+        mode: 0644
+      become: true
+
+    - name: start and enable check for Raspberry Pi EEPROM updates
+      ansible.builtin.systemd:
+        name: '{{ item }}'
+        state: started
+        enabled: yes
+      become: true
+      loop:
+        - rpi-eeprom-update.service
+        - rpi-eeprom-update.timer
+  when:
+      - raspberry_pi['generation'] == '4'

@@ -1,12 +1,8 @@
-#!/usr/bin/python
-
 # Copyright: (c) 2022, Dennis Lamm
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
-
-import re
-from typing import Dict
 
 DOCUMENTATION = r'''
 ---
@@ -16,7 +12,7 @@ short_description: This module provides facts for Raspberry PI devices
 
 version_added: "1.0.0"
 
-description: This facts module provides facts for Raspberry PI devices like the Raspberry PI Model
+description: This facts module provides facts for Raspberry PI devices like the Raspberry PI Model 3 and 4
 
 author:
 - Dennis Lamm (@expeditioneer)
@@ -52,7 +48,9 @@ raspberry_pi:
       sample: 'Raspberry Pi 3 Model B Rev 1.2'
 '''
 
-from ansible.module_utils.basic import AnsibleModule
+import re
+from typing import Dict
+from ansible.module_utils.basic import AnsibleModule  # type: ignore
 
 compile_flags: Dict[str, str] = {
     'Raspberry Pi 3 Model B Rev 1.2': '-march=armv8-a+crc -mtune=cortex-a53 -O2 -pipe',
@@ -63,7 +61,7 @@ compile_flags: Dict[str, str] = {
 
 # Model and Pi Revision
 # see https://elinux.org/RPi_HardwareHistory
-def determine_cpu_information(module) -> Dict:
+def determine_cpu_information(module: AnsibleModule) -> Dict:
     unnecessary_entries = ['processor']
 
     rc, out, err = module.run_command('cat /proc/cpuinfo', check_rc=True)
@@ -101,9 +99,6 @@ def run_module():
         supports_check_mode=True
     )
 
-    if module.check_mode:
-        module.exit_json(**result)
-
     cpu_information = determine_cpu_information(module)
 
     raspberry_pi_model = determine_raspberry_pi_model(cpu_information)
@@ -114,16 +109,14 @@ def run_module():
         'model': raspberry_pi_model,
     }
 
-    # manipulate or modify the state as needed (this is going to be the
-    # part where your module will do what it needs to do)
     result['ansible_facts'] = {
         'raspberry_pi': raspberry_pi
     }
-    # in the event of a successful module execution, you will want to
-    # simple AnsibleModule.exit_json(), passing the key/value results
+
     module.exit_json(**result)
 
 
+# TODO: check if facts already present if so do not evaluate again
 def main():
     run_module()
 

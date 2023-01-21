@@ -1,0 +1,23 @@
+#
+# {{ ansible_managed }}
+#
+
+[Match]
+Name={{ interface }}
+
+{% if network_configuration[interface] is defined %}
+[Network]
+Gateway={{ network_configuration[interface].gateway }}
+
+[Address]
+Address={{ network_configuration[interface].address }}
+{% else %}
+[Network]
+DHCP=yes
+{% endif %}
+
+[DHCPv4]
+RouteMetric={{ metric }}
+
+[IPv6AcceptRA]
+RouteMetric={{ metric }}

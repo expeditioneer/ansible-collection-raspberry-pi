@@ -1,0 +1,28 @@
+#
+# {{ ansible_managed }}
+#
+
+{# have a properly sized image #}
+disable_overscan=1
+
+{# Force booting in 64-bit mode #}
+arm_64bit=1
+
+{% if poe_hat.stat.exists %}
+{# Enable POE and fan control #}
+dtoverlay=rpi-poe
+dtparam=poe_fan_temp0=30000,poe_fan_temp0_hyst=2000
+dtparam=poe_fan_temp1=35000,poe_fan_temp1_hyst=2000
+dtparam=poe_fan_temp2=40000,poe_fan_temp2_hyst=2000
+dtparam=poe_fan_temp3=45000,poe_fan_temp3_hyst=5000
+
+{% endif %}
+dtoverlay=vc4-fkms-v3d
+max_framebuffers=2
+
+dtparam=random=on
+
+dtoverlay=disable-bt
+enable_uart=1
+
+initramfs initramfs.img followkernel

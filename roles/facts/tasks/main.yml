@@ -1,0 +1,15 @@
+---
+
+- name: set Raspberry Pi specific facts
+  expeditioneer.raspberry_pi.raspberry_pi_facts:
+
+- name: '[DEBUG] print Raspberry Pi facts'
+  ansible.builtin.debug:
+    var: ansible_facts
+    verbosity: 1
+
+- name: assert this is only executed on an supported Raspberry Pi
+  ansible.builtin.assert:
+    that:
+      - raspberry_pi['compile_flags'] is defined
+      - raspberry_pi['generation'] is defined

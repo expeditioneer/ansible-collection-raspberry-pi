@@ -1,0 +1,4 @@
+#
+# {{ ansible_managed }}
+#
+{% if root_partition.device.startswith('/dev/sd') %}usb-storage.quirks=152d:0579:u {% endif %}console=tty1 root={{ root_partition.device }} rootfstype={{ root_partition.fstype }} fsck.repair=yes rootwait cgroup_enable=cpuset cgroup_enable=memory

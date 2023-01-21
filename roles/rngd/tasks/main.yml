@@ -1,0 +1,23 @@
+---
+# TODO: check why it is not working
+
+- name: Configure rngd use-flags
+  ansible.builtin.template:
+    src: rngd.useflags.j2
+    dest: /etc/portage/package.use/10-rngd
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: install daemon to use hardware random number generators
+  expeditioneer.gentoo.portage:
+    package: sys-apps/rng-tools
+  become: true
+
+- name: start and enable rngd.service
+  ansible.builtin.systemd:
+    name: rngd
+    state: started
+    enabled: yes
+  become: true

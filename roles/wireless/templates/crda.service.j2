@@ -1,0 +1,14 @@
+#
+# {{ ansible_managed }}
+#
+
+[Unit]
+Description=Configure Central Regulatory Domain Agent with countrycode 'DE'
+After=network-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/iw reg set DE
+
+[Install]
+WantedBy=network-online.target

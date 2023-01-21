@@ -1,0 +1,17 @@
+---
+
+- name: get root filesystem
+  ansible.builtin.set_fact:
+    root_partition: '{{ item }}'
+  loop: '{{ ansible_mounts }}'
+  when: item.mount == '/'
+  become: true
+
+- name: create /boot/cmdline.txt
+  ansible.builtin.template:
+    src: cmdline.txt.j2
+    dest: /boot/cmdline.txt
+    owner: root
+    group: root
+    mode: 0755
+  become: true

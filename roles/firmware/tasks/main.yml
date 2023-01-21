@@ -1,0 +1,27 @@
+---
+
+- name: Accept for 'sys-firmware/raspberrypi-firmware' required 'raspberrypi-videocore-bin' license
+  expeditioneer.gentoo.license:
+    package: sys-boot/raspberrypi-firmware
+    license: raspberrypi-videocore-bin
+  become: true
+
+- name: Ensure /etc/portage/package.accept_keywords directory exists
+  ansible.builtin.file:
+    path: /etc/portage/package.accept_keywords
+    state: directory
+  become: true
+
+- name: Add keywords for Raspberry Pi (all versions) bootloader and GPU firmware required packages
+  ansible.builtin.template:
+    src: firmware.accept_keywords.j2
+    dest: /etc/portage/package.accept_keywords/05-firmware
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: Install Raspberry Pi (all versions) bootloader and GPU firmware
+  expeditioneer.gentoo.portage:
+    package: sys-boot/raspberrypi-firmware
+  become: true

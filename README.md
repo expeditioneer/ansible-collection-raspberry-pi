@@ -9,9 +9,9 @@ This collection requires Python 3.6 or greater.
 ## Included content
 
 ### Modules
-Name | Description
---- | ---
-[expeditioneer.raspberry_pi.raspberry_pi_facts](https://github.com/expeditioneer/ansible-collection-raspberry-pi/blob/main/docs/raspberry_pi_facts.rst)|Gather facts about the raspberry pi
+| Name                                                                                                                                                    | Description                         |
+|---------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------|
+| [expeditioneer.raspberry_pi.raspberry_pi_facts](https://github.com/expeditioneer/ansible-collection-raspberry-pi/blob/main/docs/raspberry_pi_facts.rst) | Gather facts about the raspberry pi |
 
 ## Installing this collection
 

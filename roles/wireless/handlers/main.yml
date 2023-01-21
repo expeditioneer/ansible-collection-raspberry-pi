@@ -1,0 +1,15 @@
+---
+
+- name: restart crda.service
+  ansible.builtin.systemd:
+    name: crda
+    state: restarted
+    daemon_reload: yes
+  become: true
+
+- name: restart iwd.service
+  ansible.builtin.systemd:
+    name: iwd
+    state: restarted
+    daemon_reload: yes
+  become: true
