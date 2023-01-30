@@ -1,5 +1,10 @@
 ---
 
+- name: Install USB enumeration utilities
+  expeditioneer.gentoo.portage:
+    package: sys-apps/usbutils
+  become: true
+
 - name: detect if PoE HAT is mounted
   ansible.builtin.stat:
     path: '/sys/firmware/devicetree/base/rpi-poe-fan@0'
