@@ -82,3 +82,11 @@
     state: started
     enabled: yes
   become: true
+
+# GENTOO BUG #754111
+# see https://bugs.gentoo.org/754111
+- name: '[BUG] remove pkcs8_key_parser module loading'
+  ansible.builtin.file:
+    path: /lib/modules-load.d/pkcs8.conf
+    state: absent
+  become: true
