@@ -101,17 +101,20 @@ def run_module():
 
     cpu_information = determine_cpu_information(module)
 
-    raspberry_pi_model = determine_raspberry_pi_model(cpu_information)
+    raspberry_pi_model: str = determine_raspberry_pi_model(cpu_information)
 
-    raspberry_pi: Dict = {
-        'compile_flags': compile_flags.get(raspberry_pi_model),
-        'generation': re.search(r'\d+', raspberry_pi_model).group(),
-        'model': raspberry_pi_model,
-    }
+    if raspberry_pi_model != '':
+        raspberry_pi: Dict = {
+            'compile_flags': compile_flags.get(raspberry_pi_model),
+            'generation': re.search(r'\d+', raspberry_pi_model).group(),
+            'model': raspberry_pi_model,
+        }
 
-    result['ansible_facts'] = {
-        'raspberry_pi': raspberry_pi
-    }
+        result['ansible_facts'] = {
+            'raspberry_pi': raspberry_pi
+        }
+    else:
+        result = {}
 
     module.exit_json(**result)
 
